@@ -9,6 +9,7 @@ import com.ustinovauliana.newsapi.models.SortBy
 import com.ustinovauliana.newsapi.utils.NewsApiKeyInterceptor
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import androidx.annotation.IntRange
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -27,12 +28,12 @@ interface NewsApi {
         @Query("to") to: Date? = null,
         @Query("language") languages: List<Language>? = null,
         @Query("sortBy") sortBy: SortBy? = null,
-        @Query("pageSize") @androidx.annotation.IntRange(from = 0, to = 100) pageSize: Int = 100,
-        @Query("page") @androidx.annotation.IntRange(from = 1) page: Int = 1
-        ): Result<ResponseDTO<ArticleDTO>>
+        @Query("pageSize") @IntRange(from = 0, to = 100) pageSize: Int = 100,
+        @Query("page") @IntRange(from = 1) page: Int = 1
+    ): Result<ResponseDTO<ArticleDTO>>
 }
 
-fun newsApi(
+fun NewsApi(
     baseUrl: String,
     apiKey: String,
     okHttpClient: OkHttpClient? = null,
@@ -48,7 +49,7 @@ private fun retrofit(
     okHttpClient: OkHttpClient?,
     json: Json,
 ): Retrofit {
-    val newOkHttpClient: OkHttpClient = (okHttpClient?.newBuilder() ?: OkHttpClient.Builder())
+    val modifiedOkHttpClient: OkHttpClient = (okHttpClient?.newBuilder() ?: OkHttpClient.Builder())
         .addInterceptor(NewsApiKeyInterceptor(apiKey))
         .build()
 
@@ -56,6 +57,6 @@ private fun retrofit(
         .baseUrl(baseUrl)
         .addConverterFactory(json.asConverterFactory(MediaType.get("application/json")))
         .addCallAdapterFactory(ResultCallAdapterFactory.create())
-        .client(newOkHttpClient)
+        .client(modifiedOkHttpClient)
         .build()
 }

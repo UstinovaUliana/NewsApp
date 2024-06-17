@@ -2,22 +2,17 @@ package com.ustinovauliana.newsapi.models
 
 import com.ustinovauliana.newsapi.utils.DateTimeUTCSerializer
 import kotlinx.serialization.SerialName
-import java.util.*
+import kotlinx.serialization.Serializable
+import java.util.Date
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class ArticleDTO(
-    @SerialName("source") val source: Source,
+    @SerialName("source") val source: SourceDTO,
     @SerialName("author") val author: String,
     @SerialName("title") val title: String,
     @SerialName("description") val description: String,
     @SerialName("url") val url: String,
     @SerialName("urlToImage") val urlToImage: String,
-    @SerialName("publishedAt") @kotlinx.serialization.Serializable(with = DateTimeUTCSerializer::class) val publishedAt: Date,
+    @SerialName("publishedAt") @Serializable(with = DateTimeUTCSerializer::class) val publishedAt: Date,
     @SerialName("content") val content: String,
-)
-
-@kotlinx.serialization.Serializable
-data class Source(
-    @SerialName("id") val id: String,
-    @SerialName("name") val name: String
 )
