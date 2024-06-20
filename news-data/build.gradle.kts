@@ -40,4 +40,6 @@ dependencies {
 
     implementation(project(":newsdatabase"))
     implementation(project(":newsapi"))
+
+    implementation(libs.jakarta.inject)
 }
