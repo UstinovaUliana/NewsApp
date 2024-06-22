@@ -1,25 +1,26 @@
 [versions]
 agp = "8.5.0"
 annotation = "1.7.1"
-kotlin = "1.9.0"
-coreKtx = "1.13.1"
+kotlin = "1.9.24"
+coreKtx = "1.12.0"
 kotlin-serialization-json = "1.6.3"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-android-lifecycle = "2.8.2"
-activityCompose = "1.9.0"
-composeBom = "2024.06.00"
-retrofit = "2.11.0"
+android-lifecycle = "2.7.0"
+activityCompose = "1.8.2"
+composeBom = "2024.02.00"
+retrofit = "2.9.0"
 kotlinx-coroutines = "1.8.0"
 retrofitConverterKotlinxSerialization = "1.0.0"
 retrofit-adapters-result = "1.0.9"
 appcompat = "1.6.1"
-material = "1.10.0"
+material = "1.11.0"
 room = "2.6.1"
-ksp = "1.9.22-1.0.17"
-dagger = "2.44"
-jakarta = "2.0.1"
+ksp = "1.9.24-1.0.20"
+dagger = "2.50"
+javax-inject = "1"
+okhttp = "4.12.0"
 
 
 [libraries]
@@ -62,8 +63,10 @@ dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref =
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 dagger-main = { module = "com.google.dagger:dagge2", version.ref = "dagger" }
-jakarta-inject= { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakarta" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javax-inject" }
 
+okhttp = {module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp"}
+okhttp-logging-interceptor = {module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

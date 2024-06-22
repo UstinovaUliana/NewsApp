@@ -6,7 +6,7 @@ import com.ustinovauliana.newsapi.models.ArticleDTO
 import com.ustinovauliana.newsapi.models.ResponseDTO
 import com.ustinovauliana.newsdatabase.NewsDatabase
 import com.ustinovauliana.newsdatabase.models.ArticleDBO
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
@@ -22,18 +22,18 @@ import kotlinx.coroutines.flow.onEach
 class ArticlesRepository @Inject constructor(
     private val database: NewsDatabase,
     private val api: NewsApi,
-    private val requestResponseMergeStrategy: MergeStrategy<RequestResult<List<ArticleRepoObj>>>,
 ) {
 
     fun getAll(
+        query: String,
         mergeStrategy: MergeStrategy<RequestResult<List<ArticleRepoObj>>> = RequestResponseMergeStrategy(),
     ): Flow<RequestResult<List<ArticleRepoObj>>> {
         val localArticles = getAllFromDatabase()
 
-        val remoteArticles = getAllFromServer()
+        val remoteArticles = getAllFromServer(query)
 
 
-        return localArticles.combine(remoteArticles, requestResponseMergeStrategy::merge)
+        return localArticles.combine(remoteArticles, mergeStrategy::merge)
             .flatMapLatest{ result ->
                 if(result is RequestResult.Success) {
                     database.articlesDao.observeAll()
@@ -45,8 +45,8 @@ class ArticlesRepository @Inject constructor(
             }
     }
 
-    private fun getAllFromServer(): Flow<RequestResult<List<ArticleRepoObj>>> {
-        val apiRequest = flow { emit(api.everything()) }
+    private fun getAllFromServer(query: String): Flow<RequestResult<List<ArticleRepoObj>>> {
+        val apiRequest = flow { emit(api.everything(query = query)) }
             .onEach { result ->
                 if (result.isSuccess) {
                     saveNetResponseToCache(result.getOrThrow().articles)
@@ -82,11 +82,4 @@ class ArticlesRepository @Inject constructor(
         }
     }
 
-    suspend fun search(query: String): Flow<ArticleRepoObj> {
-        TODO("Not implemented")
-    }
-
-    fun fetchLatest(): Flow<RequestResult<List<ArticleRepoObj>>> {
-        return getAllFromServer()
-    }
 }

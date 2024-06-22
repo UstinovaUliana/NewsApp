@@ -6,11 +6,12 @@ import com.ustinovauliana.news.data.map
 import com.ustinovauliana.news.data.model.ArticleRepoObj
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class GetAllArticlesUseCase(private val repository: ArticlesRepository) {
+internal class GetAllArticlesUseCase @Inject constructor (private val repository: ArticlesRepository) {
 
-    operator fun invoke(): Flow<RequestResult<List<Article>>> {
-        return repository.getAll()
+    operator fun invoke(query: String): Flow<RequestResult<List<ArticleUI>>> {
+        return repository.getAll(query)
             .map { requestResult ->
                 requestResult.map { articles ->
                     articles.map { it.toUiArticles() }
@@ -19,6 +20,12 @@ class GetAllArticlesUseCase(private val repository: ArticlesRepository) {
     }
 }
 
-private fun ArticleRepoObj.toUiArticles(): Article {
-    TODO("Not yet implemented")
+private fun ArticleRepoObj.toUiArticles(): ArticleUI {
+    return ArticleUI(
+        id = id,
+        title = title,
+        description = description,
+        imageUrl = urlToImage,
+        url = url
+    )
 }

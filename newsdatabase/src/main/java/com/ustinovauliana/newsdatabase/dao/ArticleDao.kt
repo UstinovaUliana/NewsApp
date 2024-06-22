@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface ArticleDao {
 
     @Query("SELECT * FROM articles")
-    fun getAll(): List<ArticleDBO>
+    suspend fun getAll(): List<ArticleDBO>
 
     @Query("SELECT * FROM articles")
     fun observeAll(): Flow<List<ArticleDBO>>

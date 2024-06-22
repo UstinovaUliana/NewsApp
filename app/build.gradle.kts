@@ -21,8 +21,8 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String","NEWS_API_KEY","\"\"")
-        buildConfigField("String","NEWS_API_BASE_URL","\"\"")
+        buildConfigField("String","NEWS_API_KEY","\"58ae2a237449408ebef68c4764682797\"")
+        buildConfigField("String","NEWS_API_BASE_URL","\"https://newsapi.org/v2/\"")
     }
 
     buildTypes {
@@ -35,18 +35,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         buildConfig = true
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -73,5 +73,9 @@ dependencies {
 
     implementation(project(":news-data"))
     implementation(project(":newsapi"))
+    implementation(project(":features:news-main"))
     implementation(project(":newsdatabase"))
+    implementation(project(":news-common"))
+
+    implementation(libs.okhttp.logging.interceptor)
 }
