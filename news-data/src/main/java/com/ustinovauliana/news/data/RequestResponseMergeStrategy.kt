@@ -1,53 +1,95 @@
 package com.ustinovauliana.news.data
 
+import com.ustinovauliana.news.data.RequestResult.Error
+import com.ustinovauliana.news.data.RequestResult.InProgress
+import com.ustinovauliana.news.data.RequestResult.Success
+
 interface MergeStrategy<E> {
 
     fun merge(first: E, second: E): E
 }
-internal class RequestResponseMergeStrategy<T: Any>: MergeStrategy<RequestResult<T>> {
+
+internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResult<T>> {
 
     override fun merge(cache: RequestResult<T>, server: RequestResult<T>): RequestResult<T> {
         return when {
-            cache is RequestResult.InProgress && server is RequestResult.InProgress -> merge(cache, server)
-            cache is RequestResult.Success && server is RequestResult.InProgress -> merge(cache, server)
-            cache is RequestResult.InProgress && server is RequestResult.Success -> merge(cache, server)
-            cache is RequestResult.Success && server is RequestResult.Error -> merge(cache, server)
-            cache is RequestResult.Success && server is RequestResult.Success -> merge(cache, server)
-            cache is RequestResult.InProgress && server is RequestResult.Error -> merge(cache, server)
-            /*
-            cache is RequestResult.Error && server is RequestResult.InProgress -> merge(cache, server)
-            cache is RequestResult.Error && server is RequestResult.Error -> merge(cache, server)
-            cache is RequestResult.Error && server is RequestResult.Success -> merge(cache, server)
+            cache is InProgress && server is InProgress -> merge(cache, server)
+            cache is Success && server is InProgress -> merge(cache, server)
+            cache is InProgress && server is Success -> merge(cache, server)
+            cache is Success && server is Error -> merge(cache, server)
+            cache is Success && server is Success -> merge(cache, server)
+            cache is InProgress && server is Error -> merge(cache, server)
+            cache is Error && server is InProgress -> merge(cache, server)
+            cache is Error && server is Error -> merge(cache, server)
+            cache is Error && server is Success -> merge(cache, server)
 
-             */
             else -> error("Unimplemented branch")
         }
     }
 
-    private fun merge(cache: RequestResult.InProgress<T>, server: RequestResult.InProgress<T>): RequestResult<T> {
+    private fun merge(
+        cache: InProgress<T>,
+        server: InProgress<T>
+    ): RequestResult<T> {
         return when {
-            cache.data!=null -> return RequestResult.InProgress(cache.data)
-            else -> RequestResult.InProgress(server.data)
-            }
+            cache.data != null -> return InProgress(cache.data)
+            else -> InProgress(server.data)
         }
-
-    private fun merge(cache: RequestResult.Success<T>, server: RequestResult.InProgress<T>): RequestResult<T> {
-        return RequestResult.InProgress(cache.data)
     }
 
-    private fun merge(cache: RequestResult.InProgress<T>, server: RequestResult.Success<T>): RequestResult<T> {
-        return RequestResult.InProgress(server.data)
+    private fun merge(
+        cache: Success<T>,
+        server: InProgress<T>
+    ): RequestResult<T> {
+        return InProgress(cache.data)
     }
 
-    private fun merge(cache: RequestResult.Success<T>, server: RequestResult.Success<T>): RequestResult<T> {
-        return RequestResult.Success(server.data)
+    private fun merge(
+        cache: InProgress<T>,
+        server: Success<T>
+    ): RequestResult<T> {
+        return InProgress(server.data)
     }
 
-    private fun merge(cache: RequestResult.Success<T>, server: RequestResult.Error<T>): RequestResult<T> {
-        return RequestResult.Error(cache.data,error = server.error)
+    private fun merge(
+        cache: Success<T>,
+        server: Success<T>
+    ): RequestResult<T> {
+        return Success(server.data)
     }
 
-    private fun merge(cache: RequestResult.InProgress<T>, server: RequestResult.Error<T>): RequestResult<T> {
-        return RequestResult.Error(server.data?: cache.data, error = server.error)
+    private fun merge(
+        cache: Success<T>,
+        server: Error<T>
+    ): RequestResult<T> {
+        return Error(cache.data, error = server.error)
+    }
+
+    private fun merge(
+        cache: InProgress<T>,
+        server: Error<T>
+    ): RequestResult<T> {
+        return Error(server.data ?: cache.data, error = server.error)
+    }
+
+    private fun merge(
+        cache: Error<T>,
+        server: InProgress<T>
+    ): RequestResult<T> {
+        return InProgress(server.data)
+    }
+
+    private fun merge(
+        cache: Error<T>,
+        server: Success<T>
+    ): RequestResult<T> {
+        return Success(server.data)
+    }
+
+    private fun merge(
+        cache: Error<T>,
+        server: Error<T>
+    ): RequestResult<T> {
+        return Error(server.data ?: cache.data, error = server.error)
     }
 }

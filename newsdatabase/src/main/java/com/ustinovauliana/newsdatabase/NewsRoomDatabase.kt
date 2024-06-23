@@ -27,6 +27,7 @@ fun NewsDatabase(applicationContext: Context): NewsDatabase {
             checkNotNull(applicationContext.applicationContext),
             NewsRoomDatabase::class.java,
             "news"
-        ).build()
+        )
+            .build()
     )
 }

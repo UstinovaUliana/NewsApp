@@ -23,15 +23,15 @@ internal fun ArticleDBO.toArticle() : ArticleRepoObj {
 }
 
 internal fun SourceDBO.toSource(): Source {
-    return Source(id = id ?: name, name = name)
+    return Source(id = id, name = name)
 }
 
 internal fun SourceDTO.toSource(): Source {
-    return Source(id = id ?: name, name = name)
+    return Source(id = id, name = name)
 }
 
 internal fun SourceDTO.toSourceDbo(): SourceDBO {
-    return SourceDBO(id = id ?: name, name = name)
+    return SourceDBO(id = id, name = name)
 }
 
 internal fun ArticleDTO.toArticle() : ArticleRepoObj {

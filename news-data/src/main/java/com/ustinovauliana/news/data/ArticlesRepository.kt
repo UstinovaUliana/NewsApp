@@ -9,8 +9,8 @@ import com.ustinovauliana.newsdatabase.models.ArticleDBO
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -70,8 +70,11 @@ class ArticlesRepository @Inject constructor(
 
     private fun getAllFromDatabase(): Flow<RequestResult<List<ArticleRepoObj>>> {
         val dbRequest = database.articlesDao::getAll.asFlow()
-            .map {
+            .map<List<ArticleDBO>, RequestResult<List<ArticleDBO>>> {
                 RequestResult.Success(it)
+            }
+            .catch {
+                emit(RequestResult.Error(error = it))
             }
         val start = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
         return merge(start, dbRequest)

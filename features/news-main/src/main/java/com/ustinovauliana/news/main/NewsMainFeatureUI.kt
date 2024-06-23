@@ -125,7 +125,8 @@ internal fun ArticlesWithError(articles: List<ArticleUI>?) {
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.error),
             contentAlignment = Alignment.Center
-        ) {
+        )
+        {
             Text(text = "Error during update", color = MaterialTheme.colorScheme.onError)
         }
         if (articles != null) {
