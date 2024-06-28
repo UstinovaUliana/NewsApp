@@ -21,6 +21,7 @@ internal class NewsMainViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
 
     fun forceUpdate() {
+        TODO("Not impl")
     }
 }
 

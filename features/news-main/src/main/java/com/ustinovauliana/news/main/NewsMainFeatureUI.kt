@@ -118,6 +118,7 @@ internal fun Article(
     }
 }
 
+@Suppress("MagicNumber")
 private class ArticleUIPreviewProvider : PreviewParameterProvider<ArticleUI> {
 
     override val values = sequenceOf(
@@ -137,6 +138,7 @@ private class ArticlesUIPreviewProvider : PreviewParameterProvider<List<ArticleU
     )
 }
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 private fun ProgressIndicator(state: State.Loading) {
     Box(
@@ -149,6 +151,7 @@ private fun ProgressIndicator(state: State.Loading) {
     }
 }
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 private fun ErrorMessage(state: State.Error) {
     Box(
