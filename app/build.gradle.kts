@@ -21,8 +21,8 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String","NEWS_API_KEY","\"58ae2a237449408ebef68c4764682797\"")
-        buildConfigField("String","NEWS_API_BASE_URL","\"https://newsapi.org/v2/\"")
+        buildConfigField("String", "NEWS_API_KEY", "\"58ae2a237449408ebef68c4764682797\"")
+        buildConfigField("String", "NEWS_API_BASE_URL", "\"https://newsapi.org/v2/\"")
     }
 
     buildTypes {

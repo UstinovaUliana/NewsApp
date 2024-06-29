@@ -10,14 +10,14 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.dagger.hilt.android) apply false
     alias(libs.plugins.kapt) apply false
-    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.detekt) apply true
 }
 
 allprojects.onEach { project ->
-    project.afterEvaluate{
-        with (project.plugins) {
-            if (hasPlugin(libs.plugins.jetbrains.kotlin.android.get().pluginId)
-                || hasPlugin(libs.plugins.jetbrains.kotlin.jvm.get().pluginId)
+    project.afterEvaluate {
+        with(project.plugins) {
+            if (hasPlugin(libs.plugins.jetbrains.kotlin.android.get().pluginId) ||
+                hasPlugin(libs.plugins.jetbrains.kotlin.jvm.get().pluginId)
             ) {
                 apply(libs.plugins.detekt.get().pluginId)
 
@@ -25,8 +25,7 @@ allprojects.onEach { project ->
                     config.setFrom(rootProject.files("default-detekt-config.yml"))
                 }
 
-                project.dependencies.add("detektPlugins",libs.detekt.formatting.get().toString())
-
+                project.dependencies.add("detektPlugins", libs.detekt.formatting.get().toString())
             }
         }
     }

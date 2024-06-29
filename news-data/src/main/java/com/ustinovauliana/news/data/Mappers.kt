@@ -8,7 +8,7 @@ import com.ustinovauliana.newsdatabase.models.ArticleDBO
 import com.ustinovauliana.newsdatabase.models.Source as SourceDBO
 
 
-internal fun ArticleDBO.toArticle() : ArticleRepoObj {
+internal fun ArticleDBO.toArticle(): ArticleRepoObj {
     return ArticleRepoObj(
         id = id,
         source = source?.toSource(),
@@ -34,7 +34,7 @@ internal fun SourceDTO.toSourceDbo(): SourceDBO {
     return SourceDBO(id = id, name = name)
 }
 
-internal fun ArticleDTO.toArticle() : ArticleRepoObj {
+internal fun ArticleDTO.toArticle(): ArticleRepoObj {
     return ArticleRepoObj(
         source = source?.toSource(),
         author = author,

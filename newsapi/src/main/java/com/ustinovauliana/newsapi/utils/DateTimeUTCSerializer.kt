@@ -5,9 +5,9 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 internal object DateTimeUTCSerializer : KSerializer<Date> {
 
@@ -15,6 +15,7 @@ internal object DateTimeUTCSerializer : KSerializer<Date> {
 
     override fun serialize(encoder: Encoder, value: Date) = encoder.encodeString(value.toString())
 
-    override fun deserialize(decoder: Decoder): Date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-        .parse(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): Date =
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+            .parse(decoder.decodeString())
 }

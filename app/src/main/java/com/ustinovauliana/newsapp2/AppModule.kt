@@ -19,7 +19,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNewsApi(okHttpClient: OkHttpClient?): NewsApi {
-
         return NewsApi(
             baseUrl = BuildConfig.NEWS_API_BASE_URL,
             apiKey = BuildConfig.NEWS_API_KEY,
@@ -38,5 +37,4 @@ object AppModule {
     fun provideAppCoroutineDispatchers(): AppDispatchers {
         return AppDispatchers()
     }
-
 }

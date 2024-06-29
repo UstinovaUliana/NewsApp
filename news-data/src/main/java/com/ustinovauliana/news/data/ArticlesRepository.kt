@@ -6,7 +6,6 @@ import com.ustinovauliana.newsapi.models.ArticleDTO
 import com.ustinovauliana.newsapi.models.ResponseDTO
 import com.ustinovauliana.newsdatabase.NewsDatabase
 import com.ustinovauliana.newsdatabase.models.ArticleDBO
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.catch
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 
 class ArticlesRepository @Inject constructor(
@@ -34,11 +34,11 @@ class ArticlesRepository @Inject constructor(
 
 
         return localArticles.combine(remoteArticles, mergeStrategy::merge)
-            .flatMapLatest{ result ->
-                if(result is RequestResult.Success) {
+            .flatMapLatest { result ->
+                if (result is RequestResult.Success) {
                     database.articlesDao.observeAll()
-                        .map {dbos -> dbos.map { it.toArticle() }}
-                        .map {RequestResult.Success(it)}
+                        .map { dbos -> dbos.map { it.toArticle() } }
+                        .map { RequestResult.Success(it) }
                 } else {
                     flowOf(result)
                 }
@@ -79,10 +79,10 @@ class ArticlesRepository @Inject constructor(
         val start = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
         return merge(start, dbRequest)
             .map { result ->
-            result.map { articleDBOs ->
-                articleDBOs.map { it.toArticle() }
+                result.map { articleDBOs ->
+                    articleDBOs.map { it.toArticle() }
+                }
             }
-        }
     }
 
 }

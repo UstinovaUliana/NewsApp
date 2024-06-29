@@ -1,5 +1,6 @@
 package com.ustinovauliana.newsapi
 
+import androidx.annotation.IntRange
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
 import com.ustinovauliana.newsapi.models.ArticleDTO
@@ -9,14 +10,12 @@ import com.ustinovauliana.newsapi.models.SortBy
 import com.ustinovauliana.newsapi.utils.NewsApiKeyInterceptor
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import androidx.annotation.IntRange
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.util.*
+import java.util.Date
 
 /*
  API details: https://newsapi.org/docs/endpoints/everything

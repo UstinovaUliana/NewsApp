@@ -16,7 +16,7 @@ data class ArticleDBO(
     @ColumnInfo("description") val description: String?,
     @ColumnInfo("url") val url: String?,
     @ColumnInfo("urlToImage") val urlToImage: String?,
-    @ColumnInfo("publishedAt")val publishedAt: Date?,
+    @ColumnInfo("publishedAt") val publishedAt: Date?,
     @ColumnInfo("content") val content: String?,
 )
 

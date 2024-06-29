@@ -1,4 +1,5 @@
 package com.ustinovauliana.newsapp2
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,10 +14,10 @@ class BuildTypeModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient() : OkHttpClient {
-            return OkHttpClient.Builder()
-                .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build()
+    fun provideHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .build()
     }
 
 }

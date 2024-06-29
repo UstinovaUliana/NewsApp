@@ -33,7 +33,7 @@ private fun RequestResult<List<ArticleUI>>.toState(): State {
     }
 }
 
-internal sealed class State(val articles: List<ArticleUI>?)  {
+internal sealed class State(val articles: List<ArticleUI>?) {
 
     data object None : State(articles = null)
     class Loading(articles: List<ArticleUI>? = null) : State(articles)
