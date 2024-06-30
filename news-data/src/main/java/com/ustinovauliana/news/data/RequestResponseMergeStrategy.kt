@@ -10,7 +10,7 @@ interface MergeStrategy<E> {
 }
 
 internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResult<T>> {
-
+    @Suppress("CyclomaticComplexMethod")
     override fun merge(cache: RequestResult<T>, server: RequestResult<T>): RequestResult<T> {
         return when {
             cache is InProgress && server is InProgress -> merge(cache, server)
@@ -37,6 +37,7 @@ internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResu
         }
     }
 
+    @Suppress("UnusedParameter")
     private fun merge(
         cache: Success<T>,
         server: InProgress<T>
@@ -44,6 +45,7 @@ internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResu
         return InProgress(cache.data)
     }
 
+    @Suppress("UnusedParameter")
     private fun merge(
         cache: InProgress<T>,
         server: Success<T>
@@ -51,6 +53,7 @@ internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResu
         return InProgress(server.data)
     }
 
+    @Suppress("UnusedParameter")
     private fun merge(
         cache: Success<T>,
         server: Success<T>
@@ -72,6 +75,7 @@ internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResu
         return Error(server.data ?: cache.data, error = server.error)
     }
 
+    @Suppress("UnusedParameter")
     private fun merge(
         cache: Error<T>,
         server: InProgress<T>
@@ -79,6 +83,7 @@ internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResu
         return InProgress(server.data)
     }
 
+    @Suppress("UnusedParameter")
     private fun merge(
         cache: Error<T>,
         server: Success<T>

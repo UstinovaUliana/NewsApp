@@ -13,16 +13,27 @@ ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag = @formatter:on
 ij_formatter_tags_enabled = true
 ij_smart_tabs = false
-ij_visual_guides =
 ij_wrap_on_typing = false
 
 [{*.gradle.kts,*.kt,*.kts,*.main.kts}]
+insert_final_newline = true
+parameter-list-wrapping = true
+
+ktlint_code_style = ktlint_official
+ktlint_ignore_back_ticked_identifier = true
+
+ktlint_standard = enabled
+
+# Experimental rules run by default run on the ktlint code base itself. Experimental rules should not be released if
+# we are not pleased ourselves with the results on the ktlint code base.
+ktlint_experimental = disable
+
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false
 ij_kotlin_align_multiline_method_parentheses = false
 ij_kotlin_align_multiline_parameters = true
-ij_kotlin_align_multiline_parameters_in_calls = false
+ij_kotlin_align_multiline_parameters_in_calls = true
 ij_kotlin_allow_trailing_comma = false
 ij_kotlin_allow_trailing_comma_on_call_site = false
 ij_kotlin_assignment_wrap = normal

@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.ustinovauliana.news
 
 import androidx.compose.ui.graphics.Color
