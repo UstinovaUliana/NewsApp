@@ -18,6 +18,4 @@ dependencies {
     implementation(libs.retrofit.adapters.result)
     implementation(libs.okhttp.logging.interceptor)
     api(libs.okhttp)
-
-
 }

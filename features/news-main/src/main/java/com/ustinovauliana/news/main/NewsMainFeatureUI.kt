@@ -1,6 +1,7 @@
 package com.ustinovauliana.news.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -80,6 +81,9 @@ internal fun Article(
         limit = 1
     ) article: ArticleUI
 ) {
+    var isExpanded by remember {
+     mutableStateOf(false)
+    }
     Row(Modifier.padding(bottom = 4.dp)) {
         article.imageUrl?.let { imageUrl ->
             var isImageVisible by remember { mutableStateOf(true) }
@@ -93,7 +97,7 @@ internal fun Article(
                     },
                     contentDescription = stringResource(R.string.content_dedsc_item_article_image),
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(150.dp)
+                    modifier = Modifier.size(100.dp)
                 )
             }
         }
@@ -108,7 +112,13 @@ internal fun Article(
             Text(
                 text = article.description ?: "",
                 style = NewsTheme.typography.bodyMedium,
-                maxLines = 3
+                maxLines = if (isExpanded) Int.MAX_VALUE else 3,
+            )
+            Text(
+                modifier = Modifier.clickable {
+                    isExpanded = !isExpanded
+                },
+                text = if (!isExpanded) "..." else "hide"
             )
         }
     }
