@@ -28,20 +28,20 @@ class ArticlesRepository @Inject constructor(
         query: String,
         mergeStrategy: MergeStrategy<RequestResult<List<ArticleRepoObj>>> = RequestResponseMergeStrategy(),
     ): Flow<RequestResult<List<ArticleRepoObj>>> {
-        val localArticles = getAllFromDatabase()
+        val localArticles = getAllFromDatabase(query)
 
         val remoteArticles = getAllFromServer(query)
 
 
         return localArticles.combine(remoteArticles, mergeStrategy::merge)
             .flatMapLatest { result ->
-                if (result is RequestResult.Success) {
+                  if (result is RequestResult.Success) {
                     database.articlesDao.observeAll()
                         .map { dbos -> dbos.map { it.toArticle() } }
                         .map { RequestResult.Success(it) }
                 } else {
                     flowOf(result)
-                }
+               }
             }
     }
 
@@ -68,7 +68,7 @@ class ArticlesRepository @Inject constructor(
         database.articlesDao.insert(articleDBOs)
     }
 
-    private fun getAllFromDatabase(): Flow<RequestResult<List<ArticleRepoObj>>> {
+    private fun getAllFromDatabase(query: String): Flow<RequestResult<List<ArticleRepoObj>>> {
         val dbRequest = database.articlesDao::getAll.asFlow()
             .map<List<ArticleDBO>, RequestResult<List<ArticleDBO>>> {
                 RequestResult.Success(it)
@@ -84,5 +84,4 @@ class ArticlesRepository @Inject constructor(
                 }
             }
     }
-
 }

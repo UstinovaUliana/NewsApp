@@ -88,4 +88,5 @@ object NewsTheme {
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.shapes
+
 }
