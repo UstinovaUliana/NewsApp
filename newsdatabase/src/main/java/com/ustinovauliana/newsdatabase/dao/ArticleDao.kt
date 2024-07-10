@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ArticleDao {
-//  WHERE title LIKE '%' || :query || '%'
     @Query("SELECT * FROM articles")
     suspend fun getAll(): List<ArticleDBO>
+
+    @Query("SELECT * FROM articles WHERE title LIKE '%' || :query || '%'")
+    fun searchArticles(query: String): Flow<List<ArticleDBO>>
 
     @Query("SELECT * FROM articles")
     fun observeAll(): Flow<List<ArticleDBO>>

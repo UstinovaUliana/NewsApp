@@ -32,8 +32,8 @@ internal class RequestResponseMergeStrategy<T : Any> : MergeStrategy<RequestResu
         server: InProgress<T>
     ): RequestResult<T> {
         return when {
-            cache.data != null -> return InProgress(cache.data)
-            else -> InProgress(server.data)
+            server.data != null -> return InProgress(server.data)
+            else -> InProgress(cache.data)
         }
     }
 

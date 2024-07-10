@@ -236,10 +236,10 @@ private fun ErrorMessage(state: State.Error) {
             .background(NewsTheme.colorScheme.error)
             .padding(8.dp),
         contentAlignment = Alignment.Center
-    )
-    {
+    ) {
         Text(text = "Error during update", color = NewsTheme.colorScheme.onError)
     }
 }
+
 
 
