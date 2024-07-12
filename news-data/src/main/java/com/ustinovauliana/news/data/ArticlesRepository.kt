@@ -25,29 +25,57 @@ class ArticlesRepository @Inject constructor(
 ) {
 
     fun getAll(
-        query: String,
         mergeStrategy: MergeStrategy<RequestResult<List<ArticleRepoObj>>> = RequestResponseMergeStrategy(),
     ): Flow<RequestResult<List<ArticleRepoObj>>> {
-        val localArticles = getAllFromDatabase(query)
+        val localArticles = getAllFromDatabase()
 
-        val remoteArticles = getAllFromServer(query)
-
+        val remoteArticles = getAllFromServer()
 
         return localArticles.combine(remoteArticles, mergeStrategy::merge)
            .flatMapLatest { result ->
-            /*      if (result is RequestResult.Success) {
+                  if (result is RequestResult.Success) {
                     database.articlesDao.observeAll()
                         .map { dbos -> dbos.map { it.toArticle() } }
                         .map { RequestResult.Success(it) }
                 } else {
-
-          */
                     flowOf(result)
-            //   }
+               }
             }
     }
 
-    private fun getAllFromServer(query: String): Flow<RequestResult<List<ArticleRepoObj>>> {
+    fun searchArticles(
+        query: String,
+        mergeStrategy: MergeStrategy<RequestResult<List<ArticleRepoObj>>> = RequestResponseMergeStrategy(),
+    ): Flow<RequestResult<List<ArticleRepoObj>>> {
+        val localArticles = searchFromDatabase(query)
+
+        val remoteArticles = searchFromServer(query)
+
+        return localArticles.combine(remoteArticles, mergeStrategy::merge)
+            .flatMapLatest { result ->
+                    flowOf(result)
+            }
+    }
+
+    private fun getAllFromServer(): Flow<RequestResult<List<ArticleRepoObj>>> {
+        val apiRequest = flow { emit(api.everything()) }
+            .onEach { result ->
+                if (result.isSuccess) {
+                    saveNetResponseToCache(result.getOrThrow().articles)
+                }
+            }
+            .map { it.toRequestResult() }
+        val start = flowOf<RequestResult<ResponseDTO<ArticleDTO>>>(RequestResult.InProgress())
+
+        return merge(apiRequest, start)
+            .map { result ->
+                result.map { response ->
+                    response.articles.map { it.toArticle() }
+                }
+            }
+    }
+
+    private fun searchFromServer(query: String): Flow<RequestResult<List<ArticleRepoObj>>> {
         val apiRequest = flow { emit(api.everything(query = query)) }
             .onEach { result ->
                 if (result.isSuccess) {
@@ -70,7 +98,24 @@ class ArticlesRepository @Inject constructor(
         database.articlesDao.insert(articleDBOs)
     }
 
-    private fun getAllFromDatabase(query: String): Flow<RequestResult<List<ArticleRepoObj>>> {
+    private fun getAllFromDatabase(): Flow<RequestResult<List<ArticleRepoObj>>> {
+        val dbRequest = database.articlesDao::getAll.asFlow()
+            .map<List<ArticleDBO>, RequestResult<List<ArticleDBO>>> {
+                RequestResult.Success(it)
+            }
+            .catch {
+                emit(RequestResult.Error(error = it))
+            }
+        val start = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
+        return merge(start, dbRequest)
+            .map { result ->
+                result.map { articleDBOs ->
+                    articleDBOs.map { it.toArticle() }
+                }
+            }
+    }
+
+    private fun searchFromDatabase(query: String): Flow<RequestResult<List<ArticleRepoObj>>> {
         val dbRequest = database.articlesDao.searchArticles(query)
             .map<List<ArticleDBO>, RequestResult<List<ArticleDBO>>> {
                 RequestResult.Success(it)

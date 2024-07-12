@@ -71,10 +71,9 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
                 onValueChange = { onQueryChanged: String ->
                     query = onQueryChanged
                     if (onQueryChanged.isNotEmpty()) {
-                        newsViewModel.forceUpdate(query)
+                        newsViewModel.search(query)
                     }
                 },
-
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Rounded.Search,

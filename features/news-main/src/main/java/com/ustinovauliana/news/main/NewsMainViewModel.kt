@@ -14,14 +14,15 @@ import javax.inject.Provider
 @HiltViewModel
 internal class NewsMainViewModel @Inject constructor(
     val getAllArticlesUseCase: Provider<GetAllArticlesUseCase>,
+    val searchArticlesUseCase: Provider<SearchArticlesUseCase>,
 ) : ViewModel() {
 
-    var state: StateFlow<State> = getAllArticlesUseCase.get().invoke(query = "google")
+    var state: StateFlow<State> = getAllArticlesUseCase.get().invoke()
         .map { it.toState() }
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
 
-    fun forceUpdate(query: String) {
-        state = getAllArticlesUseCase.get().invoke(query = query)
+    fun search(query: String) {
+        state = searchArticlesUseCase.get().invoke(query = query)
             .map { it.toState() }
             .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
     }
