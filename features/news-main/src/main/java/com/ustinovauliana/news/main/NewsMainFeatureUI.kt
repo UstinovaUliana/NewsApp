@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -56,6 +61,11 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
     var query: String by rememberSaveable { mutableStateOf("") }
     var showClearIcon by rememberSaveable { mutableStateOf(false) }
 
+    val density = LocalDensity.current
+    val statusBarHeight = WindowInsets.statusBars.getTop(density) / density.density
+    val navigatorBarHeight = WindowInsets.navigationBars.getBottom(density) / density.density
+
+
     if (query.isEmpty()) {
         showClearIcon = false
     } else if (query.isNotEmpty()) {
@@ -65,6 +75,9 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
     val state by newsViewModel.state.collectAsState()
  //   val currentState = state
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = statusBarHeight.dp),
         topBar = {
             TextField(
                 value = query,
