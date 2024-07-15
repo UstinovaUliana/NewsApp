@@ -54,6 +54,7 @@ fun NewsMainScreen() {
 }
 
 @Composable
+@Suppress("LongMethod")
 internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
     var query: String by rememberSaveable { mutableStateOf("") }
     var showClearIcon by rememberSaveable { mutableStateOf(false) }
@@ -64,8 +65,8 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
     showClearIcon = query.isNotEmpty()
 
     val state by newsViewModel.state.collectAsState()
-    //val currentState = state
-   // newsViewModel.getAll()
+    // val currentState = state
+    // newsViewModel.getAll()
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -249,6 +250,3 @@ private fun ErrorMessage(state: State.Error) {
         Text(text = "Error during update", color = NewsTheme.colorScheme.onError)
     }
 }
-
-
-

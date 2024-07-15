@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-
 class ArticlesRepository @Inject constructor(
     private val database: NewsDatabase,
     private val api: NewsApi,
@@ -32,14 +31,14 @@ class ArticlesRepository @Inject constructor(
         val remoteArticles = getAllFromServer()
 
         return localArticles.combine(remoteArticles, mergeStrategy::merge)
-           .flatMapLatest { result ->
-                  if (result is RequestResult.Success) {
+            .flatMapLatest { result ->
+                if (result is RequestResult.Success) {
                     database.articlesDao.observeAll()
                         .map { dbos -> dbos.map { it.toArticle() } }
                         .map { RequestResult.Success(it) }
                 } else {
                     flowOf(result)
-               }
+                }
             }
     }
 
@@ -53,7 +52,7 @@ class ArticlesRepository @Inject constructor(
 
         return localArticles.combine(remoteArticles, mergeStrategy::merge)
             .flatMapLatest { result ->
-                    flowOf(result)
+                flowOf(result)
             }
     }
 

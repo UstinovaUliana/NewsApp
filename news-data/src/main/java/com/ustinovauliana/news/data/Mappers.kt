@@ -7,7 +7,6 @@ import com.ustinovauliana.newsapi.models.SourceDTO
 import com.ustinovauliana.newsdatabase.models.ArticleDBO
 import com.ustinovauliana.newsdatabase.models.Source as SourceDBO
 
-
 internal fun ArticleDBO.toArticle(): ArticleRepoObj {
     return ArticleRepoObj(
         id = id,

@@ -6,6 +6,4 @@ internal class ArticleUI(
     val description: String?,
     val imageUrl: String?,
     val url: String?,
-) {
-
-}
+)

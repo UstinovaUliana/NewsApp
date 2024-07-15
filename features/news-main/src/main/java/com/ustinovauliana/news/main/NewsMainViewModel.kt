@@ -23,7 +23,7 @@ internal class NewsMainViewModel @Inject constructor(
 
     fun getAll() {
         state = getAllArticlesUseCase.get().invoke()
-        .map { it.toState() }
+            .map { it.toState() }
             .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
     }
 
