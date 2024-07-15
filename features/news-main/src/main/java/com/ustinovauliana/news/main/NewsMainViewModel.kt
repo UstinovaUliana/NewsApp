@@ -21,6 +21,12 @@ internal class NewsMainViewModel @Inject constructor(
         .map { it.toState() }
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
 
+    fun getAll() {
+        state = getAllArticlesUseCase.get().invoke()
+        .map { it.toState() }
+            .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
+    }
+
     fun search(query: String) {
         state = searchArticlesUseCase.get().invoke(query = query)
             .map { it.toState() }

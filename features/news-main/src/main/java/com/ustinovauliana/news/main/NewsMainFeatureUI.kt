@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -26,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,7 +35,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -63,17 +60,12 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
 
     val density = LocalDensity.current
     val statusBarHeight = WindowInsets.statusBars.getTop(density) / density.density
-    val navigatorBarHeight = WindowInsets.navigationBars.getBottom(density) / density.density
 
-
-    if (query.isEmpty()) {
-        showClearIcon = false
-    } else if (query.isNotEmpty()) {
-        showClearIcon = true
-    }
+    showClearIcon = query.isNotEmpty()
 
     val state by newsViewModel.state.collectAsState()
- //   val currentState = state
+    //val currentState = state
+   // newsViewModel.getAll()
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -85,6 +77,8 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
                     query = onQueryChanged
                     if (onQueryChanged.isNotEmpty()) {
                         newsViewModel.search(query)
+                    } else {
+                        newsViewModel.getAll()
                     }
                 },
                 leadingIcon = {
@@ -95,7 +89,10 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
                     )
                 },
                 trailingIcon = {
-                    IconButton(onClick = { query = ""}) {
+                    IconButton(onClick = {
+                        query = ""
+                        newsViewModel.getAll()
+                    }) {
                         Icon(
                             imageVector = Icons.Rounded.Clear,
                             tint = MaterialTheme.colorScheme.onBackground,
