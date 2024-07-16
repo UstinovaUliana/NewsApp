@@ -21,23 +21,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import com.ustinovauliana.news.NewsTheme
 import com.ustinovauliana.news.main.ArticleUI
+import com.ustinovauliana.news.main.NewsMainFeatureUI
+import com.ustinovauliana.news.main.NewsMainScreen
 import com.ustinovauliana.news.main.R
 
 @Composable
 internal fun Articles(
-    @PreviewParameter(ArticlesUIPreviewProvider::class, limit = 1) articles: List<ArticleUI>
+    @PreviewParameter(ArticlesUIPreviewProvider::class, limit = 1) articles: List<ArticleUI>,
+    navHostController: NavHostController
 ) {
     LazyColumn {
         items(articles) { article ->
             key(article.id) {
-                Article(article)
+                Article(article, navHostController)
             }
         }
     }
+}
+
+internal fun showArticleDetails(article: ArticleUI) {
+
 }
 
 @Composable
@@ -45,13 +53,18 @@ internal fun Article(
     @PreviewParameter(
         ArticleUIPreviewProvider::class,
         limit = 1
-    ) article: ArticleUI
+    ) article: ArticleUI,
+    navHostController: NavHostController
 ) {
     var isExpanded by remember {
         mutableStateOf(false)
     }
     Row(
-        Modifier.padding(bottom = 4.dp)
+        Modifier
+            .padding(bottom = 4.dp)
+            .clickable {
+                navHostController.navigate(NewsMainFeatureUI.ArticlePage.name)
+            }
     ) {
         article.imageUrl?.let { imageUrl ->
             var isImageVisible by remember { mutableStateOf(true) }

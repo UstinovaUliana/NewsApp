@@ -46,12 +46,48 @@ import com.ustinovauliana.news.main.ui.Articles
 
 @Composable
 fun NewsMainScreen() {
-    NewsMainScreen(newsViewModel = viewModel())
+    NewsMainScreen(newsViewModel = viewModel(),
+                   navController = rememberNavController())
+}
+
+enum class NewsMainFeatureUI() {
+    Start,
+    ArticlePage
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NewsAppBar(
+    currentScreen: NewsMainFeatureUI,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(title = { /*TODO*/ },
+              modifier = modifier,
+              navigationIcon = {
+                  if(canNavigateBack) {
+                      IconButton(onClick = navigateUp) {
+                          Icon(
+                              imageVector = Icons.Filled.ArrowBack,
+                              contentDescription = ""
+                          )
+
+                      }
+                  }
+              })
 }
 
 @Composable
 @Suppress("LongMethod")
-internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
+internal fun NewsMainScreen(newsViewModel: NewsMainViewModel,
+                            navController: NavHostController = rememberNavController()) {
+
+
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = NewsMainFeatureUI.valueOf(
+        backStackEntry?.destination?.route ?: NewsMainFeatureUI.Start.name
+    )
 
     var query: String by rememberSaveable { mutableStateOf("") }
     var showClearIcon by rememberSaveable { mutableStateOf(false) }
@@ -70,12 +106,28 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel) {
             .fillMaxSize()
             .padding(top = statusBarHeight.dp),
         topBar = {
-            SearchField(query, newsViewModel)
+            NewsAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = {
+                    navController.navigateUp()
+                })
         },
         content = { paddingValues ->
+            NavHost(
+                navController = navController,
+                startDestination = NewsMainFeatureUI.Start.name,
+                modifier = Modifier.padding(paddingValues)
+            ) {
+                composable(route = NewsMainFeatureUI.Start.name) {
+                }
+                composable(route = NewsMainFeatureUI.ArticlePage.name) {
+                }
+            }
+            SearchField(query, newsViewModel)
             Box(modifier = Modifier.padding(paddingValues)) {
                 if (state != State.None) {
-                    NewsMainContent(state)
+                    NewsMainContent(state, navController)
                 }
             }
         }
@@ -132,7 +184,7 @@ private fun SearchField(
 
 
 @Composable
-private fun NewsMainContent(currentState: State) {
+private fun NewsMainContent(currentState: State, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -144,7 +196,7 @@ private fun NewsMainContent(currentState: State) {
             ProgressIndicator(currentState)
         }
         if (currentState.articles != null) {
-            Articles(articles = currentState.articles)
+            Articles(articles = currentState.articles, navController)
         }
     }
 }
