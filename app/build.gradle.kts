@@ -63,6 +63,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(libs.dagger.hilt.android)
+    implementation(libs.androidx.navigation.compose)
     kapt(libs.dagger.hilt.compiler)
 
     implementation(project(":news-data"))

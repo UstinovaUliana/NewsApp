@@ -10,18 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,62 +30,39 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ustinovauliana.news.NewsTheme
-import com.ustinovauliana.news.main.ui.Articles
 
 @Composable
-fun NewsMainScreen() {
-    NewsMainScreen(newsViewModel = viewModel(),
-                   navController = rememberNavController())
+fun ArticleDetailsScreen() {
+    Column {
+        Text(
+            "Article",
+            textAlign = TextAlign.Center,
+            fontSize = 20.sp
+        )
+    }
 }
 
-enum class NewsMainFeatureUI() {
-    Start,
-    ArticlePage
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsAppBar(
-    currentScreen: NewsMainFeatureUI,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(title = { /*TODO*/ },
-              modifier = modifier,
-              navigationIcon = {
-                  if(canNavigateBack) {
-                      IconButton(onClick = navigateUp) {
-                          Icon(
-                              imageVector = Icons.Filled.ArrowBack,
-                              contentDescription = ""
-                          )
-
-                      }
-                  }
-              })
+fun NewsMainScreen(navController: NavController) {
+    NewsMainScreen(
+        newsViewModel = hiltViewModel(),
+        navController = navController
+    )
 }
 
 @Composable
 @Suppress("LongMethod")
-internal fun NewsMainScreen(newsViewModel: NewsMainViewModel,
-                            navController: NavHostController = rememberNavController()) {
-
-
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = NewsMainFeatureUI.valueOf(
-        backStackEntry?.destination?.route ?: NewsMainFeatureUI.Start.name
-    )
-
-    var query: String by rememberSaveable { mutableStateOf("") }
+internal fun NewsMainScreen(
+    newsViewModel: NewsMainViewModel,
+    navController: NavController,
+) {
+    val query: String by rememberSaveable { mutableStateOf("") }
     var showClearIcon by rememberSaveable { mutableStateOf(false) }
 
     val density = LocalDensity.current
@@ -98,40 +71,19 @@ internal fun NewsMainScreen(newsViewModel: NewsMainViewModel,
     showClearIcon = query.isNotEmpty()
 
     val state by newsViewModel.state.collectAsState()
-    // val currentState = state
-    // newsViewModel.getAll()
 
-    Scaffold(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = statusBarHeight.dp),
-        topBar = {
-            NewsAppBar(
-                currentScreen = currentScreen,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = {
-                    navController.navigateUp()
-                })
-        },
-        content = { paddingValues ->
-            NavHost(
-                navController = navController,
-                startDestination = NewsMainFeatureUI.Start.name,
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                composable(route = NewsMainFeatureUI.Start.name) {
-                }
-                composable(route = NewsMainFeatureUI.ArticlePage.name) {
-                }
-            }
-            SearchField(query, newsViewModel)
-            Box(modifier = Modifier.padding(paddingValues)) {
-                if (state != State.None) {
-                    NewsMainContent(state, navController)
-                }
+            .padding(top = statusBarHeight.dp)
+    ) {
+        SearchField(query, newsViewModel)
+        Box {
+            if (state != State.None) {
+                NewsMainContent(state, navController)
             }
         }
-    )
+    }
 }
 
 @Composable
@@ -184,7 +136,7 @@ private fun SearchField(
 
 
 @Composable
-private fun NewsMainContent(currentState: State, navController: NavHostController) {
+private fun NewsMainContent(currentState: State, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
